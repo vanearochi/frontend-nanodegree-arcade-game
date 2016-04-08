@@ -14,6 +14,21 @@ var Enemy = function(x, y) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
 
+    if(this.x===0){
+        Math.floor(Math.random()*10);
+
+    }
+    else if(this.x<500){
+        this.x= this.x + 2;
+    }
+    else if(this.x===player.x && this.y===player.y){
+        console.log(player.y)
+        player.x = 200;
+        player.y = 380;
+    }
+    else{
+        this.x = 0;
+    }
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -46,39 +61,55 @@ Player.prototype.render = function(){
 };
 
 Player.prototype.handleInput = function(keys){
-        console.log(this.x)
+        //console.log(this.y)
 
-        if(keys==="up"){
-                if(this.y <= 0){
-                        this.y = this.y;
-                }
-                else{
-                        this.y = this.y - 80;
-                }
+    if(keys==="up"){
+
+        if(this.y <= 60){
+            this.y = 400;
         }
-
-        else if(keys==="down"){
-
-            if(this.y >= 380){
-
-                this.y = this.y;
-
-            }
-
-
-            else{
-            this.y = this.y + 80;
-            }
-
+        else{
+            this.y = this.y - 100;
         }
+    }
+    else if(keys==="down"){
+
+        if(this.y >= 400){
+
+            this.y = this.y;
+        }
+        else{
+            this.y = this.y + 100;
+        }
+    }
+    else if(keys==="left"){
+
+        if(this.x===0){
+            this.x= this.x;
+        }
+        else{
+            this.x= this.x - 100;
+        }
+    }
+    else if(keys==="right"){
+
+        if(this.x===400){
+
+            this.x = this.x;
+        }
+        else{
+            this.x = this.x + 100;
+        }
+    }
 };
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var bug = new Enemy(100, 0);
+var bug1 = new Enemy(200,96);
 console.log(bug)
-var allEnemies = [bug];
-var player = new Player(200, 380);
+var allEnemies = [bug, bug1];
+var player = new Player(200, 400);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
