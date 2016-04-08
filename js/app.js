@@ -1,3 +1,5 @@
+
+
 // Enemies our player must avoid
 var Enemy = function(x, y) {
     // Variables applied to each of our instances go here,
@@ -17,27 +19,31 @@ Enemy.prototype.update = function(dt) {
     if(this.x===0){
         row = Math.floor(Math.random()*(3-1 +1))+1;
         if(row === 1){
-            this.y = 220;
-            this.x = 10;
+            this.y = 214;
+            this.x = 200;
         }
         else if(row === 2){
-            this.y = 130;
+            this.y = 131;
             this.x = 10;
         }
         else {
-            this.y = 50;
+            this.y = 48;
             this.x = 10;
         }
 
     }
+
     else if(this.x<500){
-        this.x= this.x + 1;
+        if(this.y===player.y && Math.floor(this.x)===player.x){
+            player.x = 200;
+            player.y = 380;
+            this.x= this.x + (101*dt);
+        }
+        else{
+        this.x= this.x + (101*dt);
+        }
     }
-    else if(this.x===player.x && this.y===player.y){
-        console.log(player.y)
-        player.x = 200;
-        player.y = 380;
-    }
+
     else{
         this.x = 0;
     }
@@ -58,6 +64,9 @@ var Player = function(x, y){
 
     this.x = x;
     this.y = y;
+    this.jump_x = 101;
+    this.jump_y = 83;
+    this.tile = 0;
 
     this.sprite = 'images/char-boy.png'
 
@@ -68,20 +77,23 @@ Player.prototype.update = function(dt){
 };
 
 Player.prototype.render = function(){
+   // var x = this.tile_x * tile_size;
+    //var y = this.tile_y * tile_size;
+
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
 
 Player.prototype.handleInput = function(keys){
+        console.log(this.x)
         console.log(this.y)
 
     if(keys==="up"){
-
         if(this.y <= 9){
             this.y = 400;
         }
         else{
-            this.y = this.y - 90;
+            this.y = this.y - this.jump_y;
         }
     }
     else if(keys==="down"){
@@ -91,37 +103,37 @@ Player.prototype.handleInput = function(keys){
             this.y = this.y;
         }
         else{
-            this.y = this.y + 90;
+            this.y = this.y + this.jump_y;
         }
     }
     else if(keys==="left"){
 
-        if(this.x===0){
+        if(this.x<=-2){
             this.x= this.x;
         }
         else{
-            this.x= this.x - 100;
+            this.x= this.x - this.jump_x;
         }
     }
     else if(keys==="right"){
 
-        if(this.x===400){
+        if(this.x>=380){
 
             this.x = this.x;
         }
         else{
-            this.x = this.x + 100;
+            this.x = this.x + this.jump_x;
         }
     }
 };
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var bug = new Enemy(0, 210);
+var bug = new Enemy(0, 214);
 var bug1 = new Enemy(0,130);
 console.log(bug)
 var allEnemies = [bug, bug1];
-var player = new Player(200, 380);
+var player = new Player(200,380);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
