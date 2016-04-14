@@ -71,10 +71,10 @@ Enemy.prototype.update = function(dt) {
         //console.log(this.enemyTileY);
 
         //if(this.enemyTileX===player.playerTileX && this.enemyTileY===player.playerTileY){
-            if((player.playerPosX+35)<(this.enemyPosX-50)){
+            if((player.playerPosX+30)<(this.enemyPosX-40)){
                 this.enemyPosX= this.enemyPosX + (50*dt);
             }
-            else if((player.playerPosX-35)>(this.enemyPosX+50)){
+            else if((player.playerPosX-30)>(this.enemyPosX+40)){
                 this.enemyPosX= this.enemyPosX + (50*dt);
             }
             else{
@@ -152,6 +152,41 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.enemyPosX, this.enemyPosY);
 };
 
+var Gem = function(){
+    this.x= 200
+    this.y = 300
+    this.sprite = 'images/Gem Blue.png'
+    this.status = "on";
+};
+
+Gem.prototype.update = function(){
+         if(this.enemyPosX===0){
+        this.enemyTileY = Math.floor(Math.random()*(4-2 +1))+2;
+        //console.log(this.enemyTileY)
+        // todo: random speeds for enemies.
+        if(this.enemyTileY === 2){
+            //this.enemyPosY = 214;
+            this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+             this.enemyPosX = 5;
+
+        }
+        else if(this.enemyTileY === 3){
+            this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+            this.enemyPosX = 5;
+        }
+        else {
+             this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+            this.enemyPosX = 5;
+        }
+
+    }
+
+
+}
+
+Gem.prototype.render = function(){
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -196,9 +231,11 @@ Player.prototype.handleInput = function(keys){
 
     if(keys==="up"){
 
-        if(this.playerTileY>=5){
+        if(this.playerTileY>=4){
 
-            this.playerPosY = board.initial.initialY - (board.tile_size.tileY * this.playerTileY);
+            this.playerPosY = board.initial.initialY;
+            this.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
+            this.playerTileY = 0;
         }
 
         else{
@@ -262,6 +299,7 @@ var allEnemies = [bug];
 
 //cord player centro 200,400
 var player = new Player();
+var gem = new Gem();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
