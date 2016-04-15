@@ -1,4 +1,12 @@
 
+
+    var boy = $("#boy");
+    console.log(boy)
+    $("section").hide("slow");
+
+
+
+
 var board = {
 
     "dimention": {
@@ -44,7 +52,7 @@ Enemy.prototype.update = function(dt) {
     //this.enemyTileX++
 
     if(this.enemyPosX===0){
-        this.enemyTileY = Math.floor(Math.random()*(4-2 +1))+2;
+        this.enemyTileY = getRandomNumber(2, 4);
         //console.log(this.enemyTileY)
         // todo: random speeds for enemies.
         if(this.enemyTileY === 2){
@@ -153,39 +161,63 @@ Enemy.prototype.render = function() {
 };
 
 var Gem = function(){
-    this.x= 200
-    this.y = 300
+    this.gemPosX= 200
+    this.gemPosY = 300
+    this.gemTileX = 10;
+    this.gemTileY =0;
     this.sprite = 'images/Gem Blue.png'
     this.status = "on";
 };
 
+var RandomNumGem = getRandomNumber(1, 7);
+var counter = 0;
+
 Gem.prototype.update = function(){
-         if(this.enemyPosX===0){
-        this.enemyTileY = Math.floor(Math.random()*(4-2 +1))+2;
-        //console.log(this.enemyTileY)
-        // todo: random speeds for enemies.
-        if(this.enemyTileY === 2){
-            //this.enemyPosY = 214;
-            this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-             this.enemyPosX = 5;
+        var counter = Math.floor(Math.random() * (7 - 1 + 1) + 1)
+        if(this.status==="on"){
+            this.gemTileX = getRandomNumber(0,4);
+            this.gemTileY = getRandomNumber(2,4);
 
-        }
-        else if(this.enemyTileY === 3){
-            this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-            this.enemyPosX = 5;
-        }
-        else {
-             this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-            this.enemyPosX = 5;
+            this.gemPosX = board.initial.initialX + (board.tile_size.tileX * this.gemTileX);
+            this.gemPosY = board.initial.initialY - (board.tile_size.tileY * this.gemTileY);
+            this.status = "off";
+            console.log(this.gemPosY)
+            console.log(this.gemTileX)
         }
 
-    }
+        if(player.playerTileY===gem.gemTileY && player.playerTileX===gem.gemTileX){
+            this.gemPosY = 600;
+        }
+
+        if(player.playerTileY>=4 && this.status==="off"){
+            console.log("bla")
+
+        }
+    //     this.enemyTileY = Math.floor(Math.random()*(4-2 +1))+2;
+    //     //console.log(this.enemyTileY)
+    //     // todo: random speeds for enemies.
+    //     if(this.enemyTileY === 2){
+    //         //this.enemyPosY = 214;
+    //         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+    //          this.enemyPosX = 5;
+
+    //     }
+    //     else if(this.enemyTileY === 3){
+    //         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+    //         this.enemyPosX = 5;
+    //     }
+    //     else {
+    //          this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+    //         this.enemyPosX = 5;
+    //     }
+
+    // }
 
 
 }
 
 Gem.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.gemPosX, this.gemPosY);
 }
 // Now write your own player class
 // This class requires an update(), render() and
@@ -199,11 +231,14 @@ var Player = function(){
     this.playerTileX = 2;
     this.playerTileY = 0;
 
-    this.sprite = 'images/char-boy.png'
+    //this.sprite = 'images/char-boy.png'
+    //this.sprite = 'images/cat-girl.png'
+    this.sprite = 'images/char-horn-girl.png'
 
 };
 
 Player.prototype.update = function(dt){
+    //console.log("player bla")
 
 };
 
@@ -221,7 +256,7 @@ Player.prototype.render = function(){
 Player.prototype.handleInput = function(keys){
 
         a = board.position.posX;
-        console.log(a)
+        //console.log(a)
 
     //     console.log(this.enemyPosX)
     //     console.log(this.enemyPosY)
@@ -232,10 +267,16 @@ Player.prototype.handleInput = function(keys){
     if(keys==="up"){
 
         if(this.playerTileY>=4){
-
+            console.log(counter)
             this.playerPosY = board.initial.initialY;
             this.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
             this.playerTileY = 0;
+            counter++;
+            if(RandomNumGem<= counter){
+                gem.status="on"
+                counter=0
+                RandomNumGem=getRandomNumber(0,7);
+            }
         }
 
         else{
@@ -301,6 +342,7 @@ var allEnemies = [bug];
 var player = new Player();
 var gem = new Gem();
 
+
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
@@ -312,5 +354,17 @@ document.addEventListener('keyup', function(e) {
     };
 
      player.handleInput(allowedKeys[e.keyCode]);
+})
 
-});
+function getRandomNumber(min, max){
+    randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+    return randomNum
+}
+
+console.log(getRandomNumber(2,4));
+
+
+
+
+
+//});
