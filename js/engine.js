@@ -138,6 +138,7 @@ var Engine = (function(global) {
         }
 
         renderEntities();
+        //renderScoreBar();
     }
 
     /* This function is called by the render function and is called on each game
@@ -175,8 +176,11 @@ var Engine = (function(global) {
         'images/enemy-bug.png',
         'images/char-boy.png',
         'images/Gem Blue.png',
-        'images/char-cat-girl.png',
-        'images/char-horn-girl.png'
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-cat-girl.png'
+
     ]);
     Resources.onReady(init);
 

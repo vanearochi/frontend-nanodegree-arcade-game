@@ -1,9 +1,10 @@
 body {
     text-align: center;
-    background-color: green;
+
+    background-color:  #b0e0e6;
 }
 
 canvas {
-	display: block;
-	text-align: center;
+	//display: block;
+	//text-align: center;
 }

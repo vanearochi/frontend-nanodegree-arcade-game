@@ -1,9 +1,185 @@
 
+ // var boy1 = new Image();
+ //    var catGirl = new Image();
+ //    var hornGirl = new Image();
+var charactersImages =[];
+var catGirl;
+var hornGirl;
+var pinkGirl;
+var princessGirl;
+var boy;
+
+var changeCharacters = function(){
+
+    var charCanvas = document.querySelector("#charCanvas");
+    var ctx = charCanvas.getContext("2d");
+    var characters={
+
+        'catGirl': 'images/char-cat-girl.png',
+        'hornGirl': 'images/char-horn-girl.png',
+        'pinkGirl': 'images/char-pink-girl.png',
+        'princessGirl': 'images/char-princess-girl.png',
+        'boy': 'images/char-boy.png'
+
+    }
+
+
+
+   for(var key in characters){
+        if(characters.hasOwnProperty(key)){
+            //console.log(key);
+            //console.log(characters[key])
+            createNewImage(key, characters[key], charactersImages);
+        }   }
+
+     charactersImages[0].onload = function(){
+        var distance = 0;
+        charactersImages.forEach(function(val){
+
+            ctx.drawImage(val, distance, 0);
+            distance = distance + 100;
+            console.log(val)
+        })
+        //ctx.drawImage
+
+    // catGirl.src = 'images/char-cat-girl.png'
+    // boy1.src = 'images/char-boy.png'
+    // boy1.id = 'boy1'
+     }
+
+     $("#charCanvas").on("click", function(){
+        console.log($(this).text)
+        canvas_x = event.pageX;
+        canvas_y = event.pageY;
+
+        if(canvas_y > 55 && canvas_y < 155){
+            if(canvas_x > 245 && canvas_x < 320){
+
+                player.sprite = 'images/char-cat-girl.png';
+
+
+            }
+            else if(canvas_x > 335 && canvas_x < 420){
+
+                player.sprite = 'images/char-horn-girl.png';
+
+            }
+            else if(canvas_x > 435 && canvas_x < 520){
+
+                player.sprite = 'images/char-pink-girl.png';
+
+            }
+            else if(canvas_x > 540 && canvas_x < 615){
+
+                player.sprite = 'images/char-princess-girl.png';
+
+            }
+            else if(canvas_x > 645  && canvas_x < 720){
+                player.sprite = 'images/char-boy.png';
+            }
+
+        }
+        console.log(canvas_x);
+        console.log(canvas_y);
+     })
+
+
+}
+
+
+changeCharacters();
+
+
+function createNewImage(name, source, arrayName){
+    //console.log(name);
+    //console.log(source)
+
+    var imageName = name
+    name = new Image();
+    name.id = imageName
+    name.src = source
+    //console.log(name.src)
+
+    if(arrayName != "other"){
+        arrayName.push(name)
+    }
+    else{
+        return name
+    }
+
+    //charactersImages.push(name)
+    //console.log(charactersImages)
+
+
+}
+
+$("#catGirl").hide("slow")
+a = $("#hornGirl");
+console.log(a)
 
     var boy = $("#boy");
-    console.log(boy)
-    $("section").hide("slow");
+    //console.log(boy)
+    //$("section").hide("slow");
 
+var scoreCanvas = document.querySelector("#scoreBoard");
+var ctx2 = scoreCanvas.getContext("2d");
+var gemmm = createNewImage("gem", 'images/Gem Blue copy.png', "other");
+var heart = createNewImage("heart", "images/Heart copy.png", "other")
+console.log(heart)
+console.log(gemmm)
+gemmm.onload = function(){
+        //var distance = 0;
+
+
+            ctx2.drawImage(gemmm, 0, 0);
+            ctx2.drawImage(heart, 60, 0);
+            ctx2.fillText("x 0", 30, 25);
+            ctx2.fillText("x 3", 80, 25);
+}
+
+var countergem = 0;
+var counterlives = 3;
+function scoreBoard(accomplishment){
+
+    console.log("scoreBoard")
+    console.log(ctx2);
+
+
+    if(accomplishment==="gem"){
+
+        console.log(countergem)
+
+        ctx2.fillStyle= "#b0e0e6";
+        ctx2.fillText("x "+countergem, 30, 25);
+        countergem++
+        ctx2.fillStyle= "black";
+        ctx2.fillText("x"+countergem, 30, 25);
+
+
+    }
+    else if(accomplishment==="bug"){
+
+        //solution found on stackoverflow
+        ctx2.fillStyle= "#b0e0e6";
+        ctx2.fillText("x "+counterlives, 80, 25);
+
+        counterlives--
+        ctx2.fillStyle= "black";
+        ctx2.fillText("x "+counterlives, 80, 25);
+
+        console.log(counterlives)
+
+        if (counterlives<=0){
+
+            console.log("lost")
+        }
+
+    }
+}
+
+function newAccomplishment(){
+    //return ctx.fillText()
+}
 
 
 
@@ -32,6 +208,8 @@ var board = {
 
 
 }
+
+var speed = 100;
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -40,6 +218,7 @@ var Enemy = function() {
     this.enemyPosY = 0;
     this.enemyTileX = 0;
     this.enemyTileY = 0;
+    //this.speed =
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -51,28 +230,39 @@ var Enemy = function() {
 Enemy.prototype.update = function(dt) {
     //this.enemyTileX++
 
+
+    //var speed = getRandomNumber(10, 200);
     if(this.enemyPosX===0){
+
+        speed = getRandomNumber(50, 500);
+        //console.log(speed)
+
         this.enemyTileY = getRandomNumber(2, 4);
+        this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+        this.enemyPosX = 5;
+        //      this.enemyPosX = 5;
         //console.log(this.enemyTileY)
         // todo: random speeds for enemies.
-        if(this.enemyTileY === 2){
-            //this.enemyPosY = 214;
-            this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-             this.enemyPosX = 5;
+        // if(this.enemyTileY === 2){
+        //     //this.enemyPosY = 214;
+        //     this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+        //      this.enemyPosX = 5;
 
-        }
-        else if(this.enemyTileY === 3){
-            this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-            this.enemyPosX = 5;
-        }
-        else {
-             this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-            this.enemyPosX = 5;
-        }
+
+        // }
+        // else if(this.enemyTileY === 3){
+        //     this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+        //     this.enemyPosX = 5;
+        // }
+        // else {
+        //      this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
+        //     this.enemyPosX = 5;
+        // }
 
     }
 
     else if(this.enemyPosX<500){
+        //console.log()
         //console.log(player.playerTileX);
         //console.log(player.playerTileY);
         //console.log(this.enemyTileX);
@@ -80,10 +270,10 @@ Enemy.prototype.update = function(dt) {
 
         //if(this.enemyTileX===player.playerTileX && this.enemyTileY===player.playerTileY){
             if((player.playerPosX+30)<(this.enemyPosX-40)){
-                this.enemyPosX= this.enemyPosX + (50*dt);
+                this.enemyPosX= this.enemyPosX + (speed*dt);
             }
             else if((player.playerPosX-30)>(this.enemyPosX+40)){
-                this.enemyPosX= this.enemyPosX + (50*dt);
+                this.enemyPosX= this.enemyPosX + (speed*dt);
             }
             else{
                 if(this.enemyTileY===player.playerTileY){
@@ -92,11 +282,14 @@ Enemy.prototype.update = function(dt) {
                     player.playerTileX = 2
                     player.playerTileY = 0
                     console.log("aja")
+                    scoreBoard("bug")
 
-                    this.enemyPosX= this.enemyPosX + (50*dt);
+                    this.enemyPosX= this.enemyPosX + (speed*dt);
+
                 }
                 else{
-                    this.enemyPosX= this.enemyPosX + (50*dt);
+                    this.enemyPosX= this.enemyPosX + (speed*dt);
+                    //console.log(speed)
                 }
 
             }
@@ -161,12 +354,13 @@ Enemy.prototype.render = function() {
 };
 
 var Gem = function(){
-    this.gemPosX= 200
-    this.gemPosY = 300
-    this.gemTileX = 10;
+    this.gemPosX= 100
+    this.gemPosY = 100
+    this.gemTileX = 0;
     this.gemTileY =0;
     this.sprite = 'images/Gem Blue.png'
     this.status = "on";
+    this.points = "onBoard"
 };
 
 var RandomNumGem = getRandomNumber(1, 7);
@@ -178,21 +372,26 @@ Gem.prototype.update = function(){
             this.gemTileX = getRandomNumber(0,4);
             this.gemTileY = getRandomNumber(2,4);
 
-            this.gemPosX = board.initial.initialX + (board.tile_size.tileX * this.gemTileX);
-            this.gemPosY = board.initial.initialY - (board.tile_size.tileY * this.gemTileY);
+            this.gemPosX = (board.initial.initialX + (board.tile_size.tileX * this.gemTileX))+25;
+            this.gemPosY = (board.initial.initialY - (board.tile_size.tileY * this.gemTileY))+50;
             this.status = "off";
-            console.log(this.gemPosY)
-            console.log(this.gemTileX)
+            this.points = "onBoard"
+            //console.log(this.gemPosY)
+            //console.log(this.gemTileX)
         }
 
-        if(player.playerTileY===gem.gemTileY && player.playerTileX===gem.gemTileX){
+        if(player.playerTileY===gem.gemTileY && player.playerTileX===gem.gemTileX && this.points==="onBoard"){
             this.gemPosY = 600;
+            //this.gemTileY = 0;
+            //this.gemTileX = 0;
+            console.log(this.status);
+            this.points = "taken";
+            scoreBoard("gem");
+            //points("gem")
+
         }
 
-        if(player.playerTileY>=4 && this.status==="off"){
-            console.log("bla")
 
-        }
     //     this.enemyTileY = Math.floor(Math.random()*(4-2 +1))+2;
     //     //console.log(this.enemyTileY)
     //     // todo: random speeds for enemies.
@@ -239,6 +438,7 @@ var Player = function(){
 
 Player.prototype.update = function(dt){
     //console.log("player bla")
+    //choosePlayer();
 
 };
 
@@ -266,12 +466,13 @@ Player.prototype.handleInput = function(keys){
 
     if(keys==="up"){
 
-        if(this.playerTileY>=4){
+        if(this.playerTileY===4){
             console.log(counter)
             this.playerPosY = board.initial.initialY;
             this.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
             this.playerTileY = 0;
             counter++;
+            points("water");
             if(RandomNumGem<= counter){
                 gem.status="on"
                 counter=0
@@ -334,7 +535,7 @@ Player.prototype.handleInput = function(keys){
 var bug = new Enemy();
 //new Enemy(0, 214);
 var bug1 = new Enemy();
-console.log(bug)
+//console.log(bug)
 //var allEnemies = [bug, bug1];
 var allEnemies = [bug];
 
@@ -361,10 +562,94 @@ function getRandomNumber(min, max){
     return randomNum
 }
 
-console.log(getRandomNumber(2,4));
+var a = document.getElementById("boy")
+console.log(player.playerTileY)
+console.log(player.playerTileX);
+
+function choosePlayer(){
+
+
+    //console.log("si")
+    $("#catGirl").click(function(){
+        console.log(":)")
+
+       player.sprite = 'images/char-cat-girl.png';
+
+        // if(player.playerTileX===2 && player.playerTileY===0){
+        // console.log("bla")
+        // }
+    })
+    $("#boy").click(function(){
+        player.sprite = 'images/char-boy.png';
+        console.log("yay")
+
+        // if(player.playerTileX===2 && player.playerTileY===0){
+        // console.log("bla")
+        // }
+    })
+    $("#horn-girl").click(function(){
+        player.sprite = 'images/char-horn-girl.png';
+        console.log("yay")
+
+        // if(player.playerTileX===2 && player.playerTileY===0){
+        // console.log("bla")
+        // }
+    })
+     $("#pink-girl").click(function(){
+        player.sprite = 'images/char-pink-girl.png';
+        console.log("yay")
+
+        // if(player.playerTileX===2 && player.playerTileY===0){
+        // console.log("bla")
+        // }
+    })
+      $("#princess-girl").click(function(){
+        player.sprite = 'images/char-princess-girl.png';
+        console.log("yay")
+
+        // if(player.playerTileX===2 && player.playerTileY===0){
+        // console.log("bla")
+        // }
+    })
+       $("#horn-girl").click(function(){
+        player.sprite = 'images/char-horn-girl.png';
+        console.log("yay")
+
+        // if(player.playerTileX===2 && player.playerTileY===0){
+        // console.log("bla")
+        // }
+    });
 
 
 
+
+
+
+        // 'images/enemy-bug.png',
+        // 'images/char-boy.png',
+        // 'images/Gem Blue.png',
+        // 'images/char-cat-girl.png',
+        // 'images/char-horn-girl.png'
+
+
+
+
+}
+
+function points(action){
+    if(action==="gem" && gem.points==="taken"){
+        console.log("points")
+       $("#points").append("<div class='col-xs-1'><image src='images/Gem Blue.png'>")
+        gem.points = "0"
+    }
+
+
+
+    };
+
+
+choosePlayer();
+scoreBoard()
 
 
 //});
