@@ -1,13 +1,14 @@
+'use strict';
 
- // var boy1 = new Image();
- //    var catGirl = new Image();
- //    var hornGirl = new Image();
 var charactersImages =[];
 var catGirl;
 var hornGirl;
 var pinkGirl;
 var princessGirl;
 var boy;
+var level = 1;
+var backgroundColor = "#b0e0e6";
+var fontColor = "black"
 
 var changeCharacters = function(){
 
@@ -131,10 +132,12 @@ gemmm.onload = function(){
         //var distance = 0;
 
 
-            ctx2.drawImage(gemmm, 0, 0);
+            ctx2.drawImage(gemmm, 10, 0);
             ctx2.drawImage(heart, 60, 0);
-            ctx2.fillText("x 0", 30, 25);
-            ctx2.fillText("x 3", 80, 25);
+            //ctx2.fillText("x 0", 30, 25);
+            updateBoardCanvas(0, 30, 25);
+            //ctx2.fillText("x 3", 80, 25);
+            updateBoardCanvas(3, 80, 25)
 }
 
 var countergem = 0;
@@ -149,37 +152,99 @@ function scoreBoard(accomplishment){
 
         console.log(countergem)
 
-        ctx2.fillStyle= "#b0e0e6";
-        ctx2.fillText("x "+countergem, 30, 25);
+        //ctx2.fillStyle= "#b0e0e6";
+        //ctx2.fillText("x "+countergem, 30, 25);
+        eraseValue(countergem, 30, 25);
         countergem++
-        ctx2.fillStyle= "black";
-        ctx2.fillText("x"+countergem, 30, 25);
+        //ctx2.fillStyle= "black";
+        //ctx2.fillText("x "+countergem, 30, 25);
+        updateBoardCanvas(countergem, 30, 25)
+        if(countergem>=3){
+            //ctx2.fillStyle= "#b0e0e6";
+            //ctx2.fillText("x "+counterlives, 80, 25);
+            eraseValue(counterlives, 80, 25)
+
+            counterlives++
+            //ctx2.fillStyle= "black";
+            //ctx2.fillText("x "+counterlives, 80, 25);
+            updateBoardCanvas(counterlives, 80, 25);
+        }
 
 
     }
     else if(accomplishment==="bug"){
 
         //solution found on stackoverflow
-        ctx2.fillStyle= "#b0e0e6";
-        ctx2.fillText("x "+counterlives, 80, 25);
+        //ctx2.fillStyle= "#b0e0e6";
+        //ctx2.fillText("x "+counterlives, 80, 25);
+        eraseValue(counterlives, 80, 25);
 
         counterlives--
-        ctx2.fillStyle= "black";
-        ctx2.fillText("x "+counterlives, 80, 25);
-
+        //ctx2.fillStyle= "black";
+        //ctx2.fillText("x "+counterlives, 80, 25);
+        updateBoardCanvas(counterlives, 80, 25);
         console.log(counterlives)
 
         if (counterlives<=0){
-
+            alert("you lost")
             console.log("lost")
+            start();
+
+
+        }
+
+    }
+    else if(accomplishment==="water"){
+        level++
+        if (level>5){
+            alert("you win")
+            start()
+
+
         }
 
     }
 }
 
-function newAccomplishment(){
+function start(){
+        //ctx2.fillStyle= "#b0e0e6";
+        //ctx2.fillText("x "+countergem, 30, 25);
+        eraseValue(countergem, 30, 25);
+        countergem=0
+        //ctx2.fillStyle= "black";
+        //ctx2.fillText("x "+countergem, 30, 25);
+        updateBoardCanvas(countergem, 30, 25);
+        //ctx2.fillStyle= "#b0e0e6";
+        //ctx2.fillText("x "+counterlives, 80, 25);
+        eraseValue(counterlives, 80, 25);
+
+        counterlives= 3
+        //ctx2.fillStyle= "black";
+        //ctx2.fillText("x "+counterlives, 80, 25);
+        updateBoardCanvas(counterlives, 80, 25);
+
+    player.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
+    player.playerPosY = board.initial.initialY;
+    player.boundingX = 0;
+    player.movementY = 0;
+    player.playerTileX = 2;
+    player.playerTileY = 0;
+    level=1
     //return ctx.fillText()
 }
+
+function updateBoardCanvas(counter, xCoord, yCoord){
+    ctx2.fillStyle= fontColor;
+    ctx2.fillText("x "+counter, xCoord, yCoord);
+
+
+}
+
+function eraseValue(counter, xCoord, yCoord){
+    ctx2.fillStyle= backgroundColor;
+    ctx2.fillText("x "+counter, xCoord, yCoord);
+}
+//updateBoardCanvas();
 
 
 
@@ -209,8 +274,19 @@ var board = {
 
 }
 
+
 var speed = 100;
+
+function speedLevel(level){
+
+    var levelSpeed= level * getRandomNumber(50,300);
+    return levelSpeed
+
+
+
+}
 // Enemies our player must avoid
+
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -234,8 +310,9 @@ Enemy.prototype.update = function(dt) {
     //var speed = getRandomNumber(10, 200);
     if(this.enemyPosX===0){
 
-        speed = getRandomNumber(50, 500);
-        //console.log(speed)
+        speed = speedLevel(level);
+        console.log(speed)
+        console.log(level)
 
         this.enemyTileY = getRandomNumber(2, 4);
         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
@@ -465,14 +542,16 @@ Player.prototype.handleInput = function(keys){
     //     //1 x: 0-100 y:50-133
 
     if(keys==="up"){
+        this.playerTileY++;
 
-        if(this.playerTileY===4){
-            console.log(counter)
+        if(this.playerTileY===5){
+            //console.log(counter)
+             console.log(this.playerTileY)
             this.playerPosY = board.initial.initialY;
             this.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
             this.playerTileY = 0;
             counter++;
-            points("water");
+            scoreBoard("water");
             if(RandomNumGem<= counter){
                 gem.status="on"
                 counter=0
@@ -482,7 +561,8 @@ Player.prototype.handleInput = function(keys){
 
         else{
 
-            this.playerTileY++;
+
+            console.log(this.playerTileY)
             this.playerPosY = board.initial.initialY - (board.tile_size.tileY * this.playerTileY);
         }
      }
@@ -558,7 +638,7 @@ document.addEventListener('keyup', function(e) {
 })
 
 function getRandomNumber(min, max){
-    randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+     var randomNum = Math.floor(Math.random() * (max - min + 1) + min);
     return randomNum
 }
 

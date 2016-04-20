@@ -96,6 +96,7 @@ var Engine = (function(global) {
         });
         player.update();
         gem.update();
+        //updateBoardCanvas();
     }
 
     /* This function initially draws the "game level", it will then call
