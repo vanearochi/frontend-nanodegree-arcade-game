@@ -10,7 +10,14 @@ var level = 1;
 var backgroundColor = "#b0e0e6";
 var fontColor = "black"
 
+/**
+ * @function changeCharacters Draws characters and changes main character.
+ * Draws characters in charCanvas iterating over characters objec. Adds click event to canvas.
+ * Detects clicks on specific coordinates and changes the character accordingly.
+*/
+
 var changeCharacters = function(){
+
 
     var charCanvas = document.querySelector("#charCanvas");
     var ctx = charCanvas.getContext("2d");
@@ -28,36 +35,36 @@ var changeCharacters = function(){
 
    for(var key in characters){
         if(characters.hasOwnProperty(key)){
-            //console.log(key);
-            //console.log(characters[key])
-            createNewImage(key, characters[key], charactersImages);
-        }   }
 
-     charactersImages[0].onload = function(){
+            createNewImage(key, characters[key], charactersImages);
+        }
+    }
+
+    charactersImages[0].onload = function(){
+
         var distance = 0;
+
         charactersImages.forEach(function(val){
 
             ctx.drawImage(val, distance, 0);
             distance = distance + 100;
             console.log(val)
+
         })
-        //ctx.drawImage
 
-    // catGirl.src = 'images/char-cat-girl.png'
-    // boy1.src = 'images/char-boy.png'
-    // boy1.id = 'boy1'
-     }
+    }
 
-     $("#charCanvas").on("click", function(){
-        console.log($(this).text)
-        canvas_x = event.pageX;
-        canvas_y = event.pageY;
+    //@listens canvas:click
+    $("#charCanvas").on("click", function(){
+
+        var canvas_x = event.pageX;
+        var canvas_y = event.pageY;
 
         if(canvas_y > 55 && canvas_y < 155){
+
             if(canvas_x > 245 && canvas_x < 320){
 
                 player.sprite = 'images/char-cat-girl.png';
-
 
             }
             else if(canvas_x > 335 && canvas_x < 420){
@@ -76,51 +83,45 @@ var changeCharacters = function(){
 
             }
             else if(canvas_x > 645  && canvas_x < 720){
+
                 player.sprite = 'images/char-boy.png';
+
             }
 
         }
-        console.log(canvas_x);
-        console.log(canvas_y);
-     })
-
-
+    })
 }
 
 
 changeCharacters();
 
+/**
+ * @function Creates a new image
+ * @param {string}  name - Image name
+ * @param {string}  source - Image src
+ * @param {string}  arrayName - Array's name or other to return a single img
+ * @returns {image} name - Image created
+ **/
 
 function createNewImage(name, source, arrayName){
-    //console.log(name);
-    //console.log(source)
 
-    var imageName = name
+    var imageName = name;
     name = new Image();
-    name.id = imageName
-    name.src = source
-    //console.log(name.src)
+    name.id = imageName;
+    name.src = source;
 
     if(arrayName != "other"){
-        arrayName.push(name)
+
+        arrayName.push(name);
+
     }
     else{
-        return name
+
+        return name;
     }
-
-    //charactersImages.push(name)
-    //console.log(charactersImages)
-
 
 }
 
-$("#catGirl").hide("slow")
-a = $("#hornGirl");
-console.log(a)
-
-    var boy = $("#boy");
-    //console.log(boy)
-    //$("section").hide("slow");
 
 var scoreCanvas = document.querySelector("#scoreBoard");
 var ctx2 = scoreCanvas.getContext("2d");
