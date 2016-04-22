@@ -7,17 +7,20 @@ var pinkGirl;
 var princessGirl;
 var boy;
 var level = 1;
-var backgroundColor = "#b0e0e6";
-var fontColor = "black"
+var backgroundColor = "white";
+var fontColor = "black";
+var countergem = 0;
+var counterlives = 3;
+var speed = 100;
 
 /**
- * @function changeCharacters Draws characters and changes main character.
+ * @function changeCharacters
+ * Draws characters and changes main character.
  * Draws characters in charCanvas iterating over characters objec. Adds click event to canvas.
  * Detects clicks on specific coordinates and changes the character accordingly.
 */
 
 var changeCharacters = function(){
-
 
     var charCanvas = document.querySelector("#charCanvas");
     var ctx = charCanvas.getContext("2d");
@@ -46,7 +49,7 @@ var changeCharacters = function(){
 
         charactersImages.forEach(function(val){
 
-            ctx.drawImage(val, distance, 0);
+            ctx.drawImage(val, distance, -50);
             distance = distance + 100;
             console.log(val)
 
@@ -57,32 +60,35 @@ var changeCharacters = function(){
     //@listens canvas:click
     $("#charCanvas").on("click", function(){
 
+        //solution found in: http://www.homeandlearn.co.uk/JS/html5_canvas_mouse_events.html
         var canvas_x = event.pageX;
         var canvas_y = event.pageY;
+        console.log(canvas_x);
+        console.log(canvas_y);
 
-        if(canvas_y > 55 && canvas_y < 155){
+        if(canvas_y > 8 && canvas_y < 102){
 
-            if(canvas_x > 245 && canvas_x < 320){
+            if(canvas_x > 103 && canvas_x < 173){
 
                 player.sprite = 'images/char-cat-girl.png';
 
             }
-            else if(canvas_x > 335 && canvas_x < 420){
+            else if(canvas_x > 193 && canvas_x < 273){
 
                 player.sprite = 'images/char-horn-girl.png';
 
             }
-            else if(canvas_x > 435 && canvas_x < 520){
+            else if(canvas_x > 299 && canvas_x < 399){
 
                 player.sprite = 'images/char-pink-girl.png';
 
             }
-            else if(canvas_x > 540 && canvas_x < 615){
+            else if(canvas_x > 400 && canvas_x < 474){
 
                 player.sprite = 'images/char-princess-girl.png';
 
             }
-            else if(canvas_x > 645  && canvas_x < 720){
+            else if(canvas_x > 503  && canvas_x < 573){
 
                 player.sprite = 'images/char-boy.png';
 
@@ -96,13 +102,13 @@ var changeCharacters = function(){
 changeCharacters();
 
 /**
- * @function Creates a new image
+ * @function createNewImage
+ * Creates a new image
  * @param {string}  name - Image name
  * @param {string}  source - Image src
  * @param {string}  arrayName - Array's name or other to return a single img
  * @returns {image} name - Image created
  **/
-
 function createNewImage(name, source, arrayName){
 
     var imageName = name;
@@ -122,106 +128,87 @@ function createNewImage(name, source, arrayName){
 
 }
 
-
+//Manipulating the score canvas, adding imgs and text.
 var scoreCanvas = document.querySelector("#scoreBoard");
 var ctx2 = scoreCanvas.getContext("2d");
-var gemmm = createNewImage("gem", 'images/Gem Blue copy.png', "other");
-var heart = createNewImage("heart", "images/Heart copy.png", "other")
-console.log(heart)
-console.log(gemmm)
-gemmm.onload = function(){
-        //var distance = 0;
+var gemBoardImg = createNewImage("gem", 'images/Gem Blue copy.png', "other");
+var heartBoardImg = createNewImage("heart", "images/Heart.png", "other")
+var textLivesCoord =
+gemBoardImg.onload = function(){
 
 
-            ctx2.drawImage(gemmm, 10, 0);
-            ctx2.drawImage(heart, 60, 0);
-            //ctx2.fillText("x 0", 30, 25);
-            updateBoardCanvas(0, 30, 25);
-            //ctx2.fillText("x 3", 80, 25);
-            updateBoardCanvas(3, 80, 25)
+            ctx2.drawImage(gemBoardImg, 0, 0);
+            ctx2.drawImage(heartBoardImg, 60, 0);
+            updateBoardCanvas(0, 0, 0);
+            updateBoardCanvas(3, 83, 53)
 }
 
-var countergem = 0;
-var counterlives = 3;
-function scoreBoard(accomplishment){
-
-    console.log("scoreBoard")
-    console.log(ctx2);
 
 
-    if(accomplishment==="gem"){
+/**
+ * @function scoreBoard
+ * Change the score and level depending on player's event(reach a gem, a bug or water).
+ * Detects if player win or loose depending on player's event.
+ * @param {string} playerEvent - Player's action on board.
+**/
+function scoreBoard(playerEvent){
+
+    if(playerEvent === "gem"){
 
         console.log(countergem)
-
-        //ctx2.fillStyle= "#b0e0e6";
-        //ctx2.fillText("x "+countergem, 30, 25);
-        eraseValue(countergem, 30, 25);
+        eraseValue(countergem, 30, 30);
         countergem++
-        //ctx2.fillStyle= "black";
-        //ctx2.fillText("x "+countergem, 30, 25);
-        updateBoardCanvas(countergem, 30, 25)
-        if(countergem>=3){
-            //ctx2.fillStyle= "#b0e0e6";
-            //ctx2.fillText("x "+counterlives, 80, 25);
-            eraseValue(counterlives, 80, 25)
+        updateBoardCanvas(countergem, 30, 25);
 
+        if(countergem >= 3){
+
+            eraseValue(counterlives, 80, 25);
             counterlives++
-            //ctx2.fillStyle= "black";
-            //ctx2.fillText("x "+counterlives, 80, 25);
             updateBoardCanvas(counterlives, 80, 25);
+
         }
 
-
     }
-    else if(accomplishment==="bug"){
+    else if(playerEvent === "bug"){
 
-        //solution found on stackoverflow
-        //ctx2.fillStyle= "#b0e0e6";
-        //ctx2.fillText("x "+counterlives, 80, 25);
         eraseValue(counterlives, 80, 25);
-
         counterlives--
-        //ctx2.fillStyle= "black";
-        //ctx2.fillText("x "+counterlives, 80, 25);
         updateBoardCanvas(counterlives, 80, 25);
-        console.log(counterlives)
+        console.log(counterlives);
 
-        if (counterlives<=0){
-            alert("you lost")
-            console.log("lost")
-            start();
+        if (counterlives <= 0){
 
+            alert("Game Over");
+            resetGameValues();
 
         }
 
     }
-    else if(accomplishment==="water"){
-        level++
-        if (level>5){
-            alert("you win")
-            start()
+    else if(playerEvent === "water"){
 
+        level++
+
+        if (level>5){
+            alert("You Win!");
+            resetGameValues();
 
         }
 
     }
 }
 
-function start(){
-        //ctx2.fillStyle= "#b0e0e6";
-        //ctx2.fillText("x "+countergem, 30, 25);
-        eraseValue(countergem, 30, 25);
-        countergem=0
-        //ctx2.fillStyle= "black";
-        //ctx2.fillText("x "+countergem, 30, 25);
-        updateBoardCanvas(countergem, 30, 25);
-        //ctx2.fillStyle= "#b0e0e6";
-        //ctx2.fillText("x "+counterlives, 80, 25);
-        eraseValue(counterlives, 80, 25);
 
-        counterlives= 3
-        //ctx2.fillStyle= "black";
-        //ctx2.fillText("x "+counterlives, 80, 25);
+/**
+ * @function resetGameValues
+ * Resets to initial the game to values.
+**/
+function resetGameValues(){
+
+        eraseValue(countergem, 30, 25);
+        countergem = 0;
+        updateBoardCanvas(countergem, 30, 25);
+        eraseValue(counterlives, 80, 25);
+        counterlives = 3;
         updateBoardCanvas(counterlives, 80, 25);
 
     player.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
@@ -231,59 +218,76 @@ function start(){
     player.playerTileX = 2;
     player.playerTileY = 0;
     level=1
-    //return ctx.fillText()
+
 }
 
+/**
+ * @function updateBoardCanvas
+ * Writes score on  score board
+**/
 function updateBoardCanvas(counter, xCoord, yCoord){
+
+
+
     ctx2.fillStyle= fontColor;
+    ctx.font = "bold 40pt Raleway";
     ctx2.fillText("x "+counter, xCoord, yCoord);
 
-
 }
 
+/**
+ * @function eraseValue
+ * Erase score on score board
+**/
 function eraseValue(counter, xCoord, yCoord){
+
     ctx2.fillStyle= backgroundColor;
     ctx2.fillText("x "+counter, xCoord, yCoord);
+
 }
-//updateBoardCanvas();
 
 
+/** Game board object created to be able to manage tiles
+    instead of pixels**/
 
 var board = {
 
     "dimention": {
+
         "dimX": 5,
         "dimY": 6
     },
 
     "position": {
+
         "posX": 0,
         "posY": 0
     },
 
     "tile_size": {
+
         "tileX": 100,
         "tileY": 83
     },
 
     "initial": {
+
         "initialX": 0,
         "initialY": 400
     }
 
-
-
 }
 
-
-var speed = 100;
-
+/**
+ * @function speedLevel
+ * Increase speed depending on game level.
+ *
+**/
 function speedLevel(level){
 
-    var levelSpeed= level * getRandomNumber(50,300);
+    // var levelSpeed= level * getRandomNumber(50,300);
+    var levelSpeed= getRandomNumber(50,300);
     return levelSpeed
-
-
 
 }
 // Enemies our player must avoid
@@ -295,7 +299,6 @@ var Enemy = function() {
     this.enemyPosY = 0;
     this.enemyTileX = 0;
     this.enemyTileY = 0;
-    //this.speed =
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -304,122 +307,62 @@ var Enemy = function() {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
+
 Enemy.prototype.update = function(dt) {
-    //this.enemyTileX++
 
-
-    //var speed = getRandomNumber(10, 200);
     if(this.enemyPosX===0){
 
+        // When the Enemy is about to "enter" the board we set his speed and
+        // the tile in Y ramdomly
         speed = speedLevel(level);
-        console.log(speed)
-        console.log(level)
-
         this.enemyTileY = getRandomNumber(2, 4);
         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
         this.enemyPosX = 5;
-        //      this.enemyPosX = 5;
-        //console.log(this.enemyTileY)
-        // todo: random speeds for enemies.
-        // if(this.enemyTileY === 2){
-        //     //this.enemyPosY = 214;
-        //     this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-        //      this.enemyPosX = 5;
-
-
-        // }
-        // else if(this.enemyTileY === 3){
-        //     this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-        //     this.enemyPosX = 5;
-        // }
-        // else {
-        //      this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-        //     this.enemyPosX = 5;
-        // }
 
     }
 
     else if(this.enemyPosX<500){
-        //console.log()
-        //console.log(player.playerTileX);
-        //console.log(player.playerTileY);
-        //console.log(this.enemyTileX);
-        //console.log(this.enemyTileY);
 
-        //if(this.enemyTileX===player.playerTileX && this.enemyTileY===player.playerTileY){
+            // We need detect the collision between the player and the enemy
+            // so we set conditions to check it
             if((player.playerPosX+30)<(this.enemyPosX-40)){
-                this.enemyPosX= this.enemyPosX + (speed*dt);
+
+                this.enemyPosX = this.enemyPosX + (speed*dt);
+
             }
             else if((player.playerPosX-30)>(this.enemyPosX+40)){
-                this.enemyPosX= this.enemyPosX + (speed*dt);
+
+                this.enemyPosX = this.enemyPosX + (speed*dt);
+
             }
+            // If the 2 condition above were false then we check if Enemy & Player
+            // are in the same tile then they are colliding
+
             else{
+                // If they collide we set the player to the initial position
+                // and call scoreBoard to keep count of lives
                 if(this.enemyTileY===player.playerTileY){
                     player.playerPosX = 200;
                     player.playerPosY = 380;
                     player.playerTileX = 2
                     player.playerTileY = 0
-                    console.log("aja")
                     scoreBoard("bug")
-
                     this.enemyPosX= this.enemyPosX + (speed*dt);
 
                 }
                 else{
+
                     this.enemyPosX= this.enemyPosX + (speed*dt);
-                    //console.log(speed)
+
                 }
 
             }
 
-
-
-
-        //}
-        // else if(this.enemyPosX<=100){
-
-
-        //         this.enemyPosX= this.enemyPosX + (50*dt)
-        //         this.enemyTileX = 0;
-
-        //     //console.log("cbla")
-
-        // }
-        // else if(this.enemyPosX<=200){
-        //     //console.log("cbla")
-        //     this.enemyPosX= this.enemyPosX + (50*dt)
-        //     this.enemyTileX = 1;
-        // }
-        // else if(this.enemyPosX<=300){
-        //     //console.log("cbla")
-        //     this.enemyPosX= this.enemyPosX + (50*dt)
-        //     this.enemyTileX = 2;
-        // }
-        // else if(this.enemyPosX<=400){
-        //     //console.log("cbla")
-        //     this.enemyPosX= this.enemyPosX + (50*dt)
-        //     this.enemyTileX = 3;
-        // }
-        // else if(this.enemyPosX<=500){
-        //     //console.log("cbla")
-        //     this.enemyPosX= this.enemyPosX + (50*dt)
-        //     this.enemyTileX = 4;
-        // }
-       // else{
-
-            //this.enemyTileX++
-            //console.log(this.enemyTileX)
-            //this.enemyPosX = 200
-            //this.enemyPosX = (board.initial.initialX + ((board.tile_size.tileX * this.enemyTileX)*dt));
-            //console.log(this.enemyPosX)
-           //this.enemyPosX= this.enemyPosX + (50*dt);
-
-        //}
     }
-
     else{
+
         this.enemyPosX = 0;
-        //this.enemyTileX = 0;
+
     }
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -428,74 +371,59 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
+
     ctx.drawImage(Resources.get(this.sprite), this.enemyPosX, this.enemyPosY);
+
 };
+
+// Gem that player recollect to gain lives
 
 var Gem = function(){
-    this.gemPosX= 100
-    this.gemPosY = 100
+
+    this.gemPosX= 100;
+    this.gemPosY = 100;
     this.gemTileX = 0;
     this.gemTileY =0;
-    this.sprite = 'images/Gem Blue.png'
+    this.sprite = 'images/Gem Blue.png';
     this.status = "on";
-    this.points = "onBoard"
+    this.points = "onBoard";
+
 };
 
-var RandomNumGem = getRandomNumber(1, 7);
+var randomNumGem = getRandomNumber(1, 7);
 var counter = 0;
 
-Gem.prototype.update = function(){
-        var counter = Math.floor(Math.random() * (7 - 1 + 1) + 1)
-        if(this.status==="on"){
+Gem.prototype.update = function(dt){
+
+        // "on status" triggers the apparance of the Gem in the board
+        if(this.status === "on"){
+
             this.gemTileX = getRandomNumber(0,4);
             this.gemTileY = getRandomNumber(2,4);
-
             this.gemPosX = (board.initial.initialX + (board.tile_size.tileX * this.gemTileX))+25;
             this.gemPosY = (board.initial.initialY - (board.tile_size.tileY * this.gemTileY))+50;
             this.status = "off";
-            this.points = "onBoard"
-            //console.log(this.gemPosY)
-            //console.log(this.gemTileX)
-        }
+            this.points = "onBoard";
 
+        }
+        // Checking for player & gem collision. If they collide we put the gem outside the board.
+        //points change to taken so the condition can run again so we can keep track of the gems
+        //collected calling scoreBoard
         if(player.playerTileY===gem.gemTileY && player.playerTileX===gem.gemTileX && this.points==="onBoard"){
+
             this.gemPosY = 600;
-            //this.gemTileY = 0;
-            //this.gemTileX = 0;
-            console.log(this.status);
             this.points = "taken";
             scoreBoard("gem");
-            //points("gem")
 
         }
-
-
-    //     this.enemyTileY = Math.floor(Math.random()*(4-2 +1))+2;
-    //     //console.log(this.enemyTileY)
-    //     // todo: random speeds for enemies.
-    //     if(this.enemyTileY === 2){
-    //         //this.enemyPosY = 214;
-    //         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-    //          this.enemyPosX = 5;
-
-    //     }
-    //     else if(this.enemyTileY === 3){
-    //         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-    //         this.enemyPosX = 5;
-    //     }
-    //     else {
-    //          this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-    //         this.enemyPosX = 5;
-    //     }
-
-    // }
-
 
 }
 
 Gem.prototype.render = function(){
+
     ctx.drawImage(Resources.get(this.sprite), this.gemPosX, this.gemPosY);
 }
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -507,63 +435,54 @@ var Player = function(){
     this.movementY = 0;
     this.playerTileX = 2;
     this.playerTileY = 0;
-
-    //this.sprite = 'images/char-boy.png'
-    //this.sprite = 'images/cat-girl.png'
     this.sprite = 'images/char-horn-girl.png'
 
 };
 
 Player.prototype.update = function(dt){
-    //console.log("player bla")
-    //choosePlayer();
+
+    this.playerPosY*dt;
+    this.playerPosX*dt;
+    this.playerTileY*dt;
+    this.playerTileX*dt;
 
 };
 
 Player.prototype.render = function(){
-    //console.log(this.playerPosX);
-    //console.log(this.playerPosY);
-   // var x = this.tile_x * tile_size;
-    //var y = this.tile_y * tile_size;
-    //ctx.rect(this.enemyPosX, this.enemyPosY, 5, 5);
-    //ctx.fill();
+
     ctx.drawImage(Resources.get(this.sprite), this.playerPosX, this.playerPosY);
 
 };
 
 Player.prototype.handleInput = function(keys){
 
-        a = board.position.posX;
-        //console.log(a)
+    if(keys === "up"){
 
-    //     console.log(this.enemyPosX)
-    //     console.log(this.enemyPosY)
-    //     //x va de 0 -> 500
-    //     //y va de 50 -> 548
-    //     //1 x: 0-100 y:50-133
-
-    if(keys==="up"){
         this.playerTileY++;
 
-        if(this.playerTileY===5){
-            //console.log(counter)
-             console.log(this.playerTileY)
+        // When player arrives to the last tile, we set the position to initialvalues,
+        // we increase the counter to one to control the gem appearance on the board
+        // we keep track of the level calling scoreboard
+
+        if(this.playerTileY >= 5){
+
             this.playerPosY = board.initial.initialY;
             this.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
             this.playerTileY = 0;
             counter++;
             scoreBoard("water");
-            if(RandomNumGem<= counter){
-                gem.status="on"
-                counter=0
-                RandomNumGem=getRandomNumber(0,7);
+
+            //counter is equal of bigger than the random number then we trigger on the status for the
+            // gem appeareance on the board
+            if(randomNumGem <= counter){
+
+                gem.status= "on"
+                counter= 0
+                randomNumGem= getRandomNumber(0,1);
             }
         }
-
         else{
 
-
-            console.log(this.playerTileY)
             this.playerPosY = board.initial.initialY - (board.tile_size.tileY * this.playerTileY);
         }
      }
@@ -584,7 +503,7 @@ Player.prototype.handleInput = function(keys){
 
     else if(keys==="right"){
 
-        if(this.playerTileX>=4){
+        if(this.playerTileX >= 4){
 
             this.playerPosX = board.initial.initialX + (board.tile_size.tileX * this.playerTileX);
         }
@@ -597,7 +516,7 @@ Player.prototype.handleInput = function(keys){
     }
     else if(keys==="left"){
 
-        if(this.playerTileX<=0){
+        if(this.playerTileX <= 0){
 
             this.playerPosX = board.initial.initialX + (board.tile_size.tileX * this.playerTileX);
         }
@@ -614,13 +533,8 @@ Player.prototype.handleInput = function(keys){
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var bug = new Enemy();
-//new Enemy(0, 214);
 var bug1 = new Enemy();
-//console.log(bug)
-//var allEnemies = [bug, bug1];
-var allEnemies = [bug];
-
-//cord player centro 200,400
+var allEnemies = [bug, bug1];
 var player = new Player();
 var gem = new Gem();
 
@@ -638,99 +552,26 @@ document.addEventListener('keyup', function(e) {
      player.handleInput(allowedKeys[e.keyCode]);
 })
 
+/** @function getRandomNumber
+  * Gives a random rumber between two numbers.
+  * @param {number} min - Minimum number
+  * @param {number} max - Maximum number
+  * @returns {number} A random number
+**/
 function getRandomNumber(min, max){
+
      var randomNum = Math.floor(Math.random() * (max - min + 1) + min);
     return randomNum
-}
-
-var a = document.getElementById("boy")
-console.log(player.playerTileY)
-console.log(player.playerTileX);
-
-function choosePlayer(){
-
-
-    //console.log("si")
-    $("#catGirl").click(function(){
-        console.log(":)")
-
-       player.sprite = 'images/char-cat-girl.png';
-
-        // if(player.playerTileX===2 && player.playerTileY===0){
-        // console.log("bla")
-        // }
-    })
-    $("#boy").click(function(){
-        player.sprite = 'images/char-boy.png';
-        console.log("yay")
-
-        // if(player.playerTileX===2 && player.playerTileY===0){
-        // console.log("bla")
-        // }
-    })
-    $("#horn-girl").click(function(){
-        player.sprite = 'images/char-horn-girl.png';
-        console.log("yay")
-
-        // if(player.playerTileX===2 && player.playerTileY===0){
-        // console.log("bla")
-        // }
-    })
-     $("#pink-girl").click(function(){
-        player.sprite = 'images/char-pink-girl.png';
-        console.log("yay")
-
-        // if(player.playerTileX===2 && player.playerTileY===0){
-        // console.log("bla")
-        // }
-    })
-      $("#princess-girl").click(function(){
-        player.sprite = 'images/char-princess-girl.png';
-        console.log("yay")
-
-        // if(player.playerTileX===2 && player.playerTileY===0){
-        // console.log("bla")
-        // }
-    })
-       $("#horn-girl").click(function(){
-        player.sprite = 'images/char-horn-girl.png';
-        console.log("yay")
-
-        // if(player.playerTileX===2 && player.playerTileY===0){
-        // console.log("bla")
-        // }
-    });
-
-
-
-
-
-
-        // 'images/enemy-bug.png',
-        // 'images/char-boy.png',
-        // 'images/Gem Blue.png',
-        // 'images/char-cat-girl.png',
-        // 'images/char-horn-girl.png'
-
-
-
 
 }
 
-function points(action){
-    if(action==="gem" && gem.points==="taken"){
-        console.log("points")
-       $("#points").append("<div class='col-xs-1'><image src='images/Gem Blue.png'>")
-        gem.points = "0"
-    }
 
 
 
-    };
 
 
-choosePlayer();
+
 scoreBoard()
 
 
-//});
+

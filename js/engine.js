@@ -94,8 +94,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
-        gem.update();
+        player.update(dt);
+        gem.update(dt);
         //updateBoardCanvas();
     }
 
