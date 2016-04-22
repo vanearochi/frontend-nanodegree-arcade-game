@@ -133,14 +133,17 @@ var scoreCanvas = document.querySelector("#scoreBoard");
 var ctx2 = scoreCanvas.getContext("2d");
 var gemBoardImg = createNewImage("gem", 'images/Gem Blue copy.png', "other");
 var heartBoardImg = createNewImage("heart", "images/Heart.png", "other")
-var textLivesCoord =
+var livesCoordX = 83;
+var livGemCoordY = 25;
+var gemCoordX = 25;
+
 gemBoardImg.onload = function(){
 
 
             ctx2.drawImage(gemBoardImg, 0, 0);
-            ctx2.drawImage(heartBoardImg, 60, 0);
-            updateBoardCanvas(0, 0, 0);
-            updateBoardCanvas(3, 83, 53)
+            ctx2.drawImage(heartBoardImg, 60, 3);
+            updateBoardCanvas(0, gemCoordX, livGemCoordY);
+            updateBoardCanvas(3, livesCoordX, livGemCoordY)
 }
 
 
@@ -156,24 +159,24 @@ function scoreBoard(playerEvent){
     if(playerEvent === "gem"){
 
         console.log(countergem)
-        eraseValue(countergem, 30, 30);
+        eraseValue(countergem, gemCoordX, livGemCoordY);
         countergem++
-        updateBoardCanvas(countergem, 30, 25);
+        updateBoardCanvas(countergem, gemCoordX, livGemCoordY);
 
         if(countergem >= 3){
 
-            eraseValue(counterlives, 80, 25);
+            eraseValue(counterlives, livesCoordX, livGemCoordY);
             counterlives++
-            updateBoardCanvas(counterlives, 80, 25);
+            updateBoardCanvas(counterlives, livesCoordX, livGemCoordY);
 
         }
 
     }
     else if(playerEvent === "bug"){
 
-        eraseValue(counterlives, 80, 25);
+        eraseValue(counterlives, livesCoordX, livGemCoordY);
         counterlives--
-        updateBoardCanvas(counterlives, 80, 25);
+        updateBoardCanvas(counterlives, livesCoordX, livGemCoordY);
         console.log(counterlives);
 
         if (counterlives <= 0){
@@ -187,8 +190,12 @@ function scoreBoard(playerEvent){
     else if(playerEvent === "water"){
 
         level++
+        if(level%3===0){
+            newEnemycreator(level);
+        }
 
-        if (level>5){
+
+        if (level>=10){
             alert("You Win!");
             resetGameValues();
 
@@ -204,12 +211,12 @@ function scoreBoard(playerEvent){
 **/
 function resetGameValues(){
 
-        eraseValue(countergem, 30, 25);
+        eraseValue(countergem, gemCoordX, livGemCoordY);
         countergem = 0;
-        updateBoardCanvas(countergem, 30, 25);
-        eraseValue(counterlives, 80, 25);
+        updateBoardCanvas(countergem, gemCoordX, livGemCoordY);
+        eraseValue(counterlives, livesCoordX, livGemCoordY);
         counterlives = 3;
-        updateBoardCanvas(counterlives, 80, 25);
+        updateBoardCanvas(counterlives, livesCoordX, livGemCoordY);
 
     player.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
     player.playerPosY = board.initial.initialY;
@@ -218,6 +225,8 @@ function resetGameValues(){
     player.playerTileX = 2;
     player.playerTileY = 0;
     level=1
+    allEnemies= [allEnemies[0]];
+
 
 }
 
@@ -285,8 +294,8 @@ var board = {
 **/
 function speedLevel(level){
 
-    // var levelSpeed= level * getRandomNumber(50,300);
-    var levelSpeed= getRandomNumber(50,300);
+
+    var levelSpeed= level*(getRandomNumber(50,300));
     return levelSpeed
 
 }
@@ -317,7 +326,7 @@ Enemy.prototype.update = function(dt) {
         speed = speedLevel(level);
         this.enemyTileY = getRandomNumber(2, 4);
         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-        this.enemyPosX = 5;
+        this.enemyPosX = -4;
 
     }
 
@@ -533,8 +542,8 @@ Player.prototype.handleInput = function(keys){
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var bug = new Enemy();
-var bug1 = new Enemy();
-var allEnemies = [bug, bug1];
+//var bug1 = new Enemy();
+var allEnemies = [bug];
 var player = new Player();
 var gem = new Gem();
 
@@ -564,6 +573,13 @@ function getRandomNumber(min, max){
     return randomNum
 
 }
+
+function newEnemycreator(level){
+    var level = new Enemy();
+    allEnemies.push(level);
+    console.log(allEnemies)
+}
+
 
 
 
