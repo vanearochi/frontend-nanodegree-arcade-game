@@ -308,6 +308,7 @@ var Enemy = function() {
     this.enemyPosY = 0;
     this.enemyTileX = 0;
     this.enemyTileY = 0;
+    this.enemySpeed = 100;
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -323,7 +324,7 @@ Enemy.prototype.update = function(dt) {
 
         // When the Enemy is about to "enter" the board we set his speed and
         // the tile in Y ramdomly
-        speed = speedLevel(level);
+        this.enemySpeed = speedLevel(level);
         this.enemyTileY = getRandomNumber(2, 4);
         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
         this.enemyPosX = -4;
@@ -336,12 +337,12 @@ Enemy.prototype.update = function(dt) {
             // so we set conditions to check it
             if((player.playerPosX+30)<(this.enemyPosX-40)){
 
-                this.enemyPosX = this.enemyPosX + (speed*dt);
+                this.enemyPosX = this.enemyPosX + (this.enemySpeed*dt);
 
             }
             else if((player.playerPosX-30)>(this.enemyPosX+40)){
 
-                this.enemyPosX = this.enemyPosX + (speed*dt);
+                this.enemyPosX = this.enemyPosX + (this.enemySpeed*dt);
 
             }
             // If the 2 condition above were false then we check if Enemy & Player
@@ -356,12 +357,12 @@ Enemy.prototype.update = function(dt) {
                     player.playerTileX = 2
                     player.playerTileY = 0
                     scoreBoard("bug")
-                    this.enemyPosX= this.enemyPosX + (speed*dt);
+                    this.enemyPosX= this.enemyPosX + (this.enemySpeed*dt);
 
                 }
                 else{
 
-                    this.enemyPosX= this.enemyPosX + (speed*dt);
+                    this.enemyPosX= this.enemyPosX + (this.enemySpeed*dt);
 
                 }
 
