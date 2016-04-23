@@ -1,17 +1,12 @@
 'use strict';
 
 var charactersImages =[];
-var catGirl;
-var hornGirl;
-var pinkGirl;
-var princessGirl;
-var boy;
 var level = 1;
 var backgroundColor = "white";
 var fontColor = "black";
 var countergem = 0;
 var counterlives = 3;
-var speed = 100;
+
 
 /**
  * @function changeCharacters
@@ -31,12 +26,12 @@ var changeCharacters = function(){
         'pinkGirl': 'images/char-pink-girl.png',
         'princessGirl': 'images/char-princess-girl.png',
         'boy': 'images/char-boy.png'
-
-    }
+    };
 
 
 
    for(var key in characters){
+
         if(characters.hasOwnProperty(key)){
 
             createNewImage(key, characters[key], charactersImages);
@@ -51,11 +46,9 @@ var changeCharacters = function(){
 
             ctx.drawImage(val, distance, -50);
             distance = distance + 100;
-            console.log(val)
-
-        })
-
-    }
+            console.log(val);
+        });
+    };
 
     //@listens canvas:click
     $("#charCanvas").on("click", function(){
@@ -68,35 +61,29 @@ var changeCharacters = function(){
 
         if(canvas_y > 8 && canvas_y < 102){
 
-            if(canvas_x > 103 && canvas_x < 173){
+            if(canvas_x > 50 && canvas_x < 120){
 
-                player.sprite = 'images/char-cat-girl.png';
-
+                player.sprite = characters.catGirl;
             }
-            else if(canvas_x > 193 && canvas_x < 273){
+            else if(canvas_x > 140 && canvas_x < 220){
 
-                player.sprite = 'images/char-horn-girl.png';
-
+                player.sprite = characters.hornGirl;
             }
-            else if(canvas_x > 299 && canvas_x < 399){
+            else if(canvas_x > 240 && canvas_x < 320){
 
-                player.sprite = 'images/char-pink-girl.png';
-
+                player.sprite = characters.pinkGirl;
             }
-            else if(canvas_x > 400 && canvas_x < 474){
+            else if(canvas_x > 345 && canvas_x < 420){
 
-                player.sprite = 'images/char-princess-girl.png';
-
+                player.sprite = characters.princessGirl;
             }
-            else if(canvas_x > 503  && canvas_x < 573){
+            else if(canvas_x > 450  && canvas_x < 520){
 
-                player.sprite = 'images/char-boy.png';
-
+                player.sprite = characters.boy;
             }
-
         }
-    })
-}
+    });
+};
 
 
 changeCharacters();
@@ -119,116 +106,36 @@ function createNewImage(name, source, arrayName){
     if(arrayName != "other"){
 
         arrayName.push(name);
-
     }
     else{
 
         return name;
     }
-
 }
 
-//Manipulating the score canvas, adding imgs and text.
+//Manipulating the score canvas, adding images and text.
 var scoreCanvas = document.querySelector("#scoreBoard");
 var ctx2 = scoreCanvas.getContext("2d");
 var gemBoardImg = createNewImage("gem", 'images/Gem Blue copy.png', "other");
-var heartBoardImg = createNewImage("heart", "images/Heart.png", "other")
+var heartBoardImg = createNewImage("heart", "images/Heart.png", "other");
 var livesCoordX = 83;
 var livGemCoordY = 25;
 var gemCoordX = 25;
+var levelCoordX = 160;
 
 gemBoardImg.onload = function(){
 
 
             ctx2.drawImage(gemBoardImg, 0, 0);
             ctx2.drawImage(heartBoardImg, 60, 3);
-            updateBoardCanvas(0, gemCoordX, livGemCoordY);
-            updateBoardCanvas(3, livesCoordX, livGemCoordY)
-}
+            updateBoardCanvas("x "+0, gemCoordX, livGemCoordY);
+            updateBoardCanvas("x "+3, livesCoordX, livGemCoordY);
+            updateBoardCanvas("Level:", 130, livGemCoordY);
+            updateBoardCanvas(level, levelCoordX, livGemCoordY);
+};
 
-
-
-/**
- * @function scoreBoard
- * Change the score and level depending on player's event(reach a gem, a bug or water).
- * Detects if player win or loose depending on player's event.
- * @param {string} playerEvent - Player's action on board.
-**/
-function scoreBoard(playerEvent){
-
-    if(playerEvent === "gem"){
-
-        console.log(countergem)
-        eraseValue(countergem, gemCoordX, livGemCoordY);
-        countergem++
-        updateBoardCanvas(countergem, gemCoordX, livGemCoordY);
-
-        if(countergem >= 3){
-
-            eraseValue(counterlives, livesCoordX, livGemCoordY);
-            counterlives++
-            updateBoardCanvas(counterlives, livesCoordX, livGemCoordY);
-
-        }
-
-    }
-    else if(playerEvent === "bug"){
-
-        eraseValue(counterlives, livesCoordX, livGemCoordY);
-        counterlives--
-        updateBoardCanvas(counterlives, livesCoordX, livGemCoordY);
-        console.log(counterlives);
-
-        if (counterlives <= 0){
-
-            alert("Game Over");
-            resetGameValues();
-
-        }
-
-    }
-    else if(playerEvent === "water"){
-
-        level++
-        if(level%3===0){
-            newEnemycreator(level);
-        }
-
-
-        if (level>=10){
-            alert("You Win!");
-            resetGameValues();
-
-        }
-
-    }
-}
-
-
-/**
- * @function resetGameValues
- * Resets to initial the game to values.
-**/
-function resetGameValues(){
-
-        eraseValue(countergem, gemCoordX, livGemCoordY);
-        countergem = 0;
-        updateBoardCanvas(countergem, gemCoordX, livGemCoordY);
-        eraseValue(counterlives, livesCoordX, livGemCoordY);
-        counterlives = 3;
-        updateBoardCanvas(counterlives, livesCoordX, livGemCoordY);
-
-    player.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
-    player.playerPosY = board.initial.initialY;
-    player.boundingX = 0;
-    player.movementY = 0;
-    player.playerTileX = 2;
-    player.playerTileY = 0;
-    level=1
-    allEnemies= [allEnemies[0]];
-
-
-}
+// I consultate stackoverflow to came up with the next solution:
+//http://stackoverflow.com/questions/3543687/how-do-i-clear-text-from-the-canvas-element
 
 /**
  * @function updateBoardCanvas
@@ -236,12 +143,9 @@ function resetGameValues(){
 **/
 function updateBoardCanvas(counter, xCoord, yCoord){
 
-
-
     ctx2.fillStyle= fontColor;
-    ctx.font = "bold 40pt Raleway";
-    ctx2.fillText("x "+counter, xCoord, yCoord);
-
+    //ctx2.font = "bold 40pt Raleway";
+    ctx2.fillText(counter, xCoord, yCoord);
 }
 
 /**
@@ -251,14 +155,12 @@ function updateBoardCanvas(counter, xCoord, yCoord){
 function eraseValue(counter, xCoord, yCoord){
 
     ctx2.fillStyle= backgroundColor;
-    ctx2.fillText("x "+counter, xCoord, yCoord);
-
+    ctx2.fillText(counter, xCoord, yCoord);
 }
 
 
 /** Game board object created to be able to manage tiles
     instead of pixels**/
-
 var board = {
 
     "dimention": {
@@ -284,8 +186,7 @@ var board = {
         "initialX": 0,
         "initialY": 400
     }
-
-}
+};
 
 /**
  * @function speedLevel
@@ -295,12 +196,11 @@ var board = {
 function speedLevel(level){
 
 
-    var levelSpeed= level*(getRandomNumber(50,300));
-    return levelSpeed
-
+    var levelSpeed= level*(getRandomNumber(100,150));
+    return levelSpeed;
 }
-// Enemies our player must avoid
 
+// Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -308,6 +208,7 @@ var Enemy = function() {
     this.enemyPosY = 0;
     this.enemyTileX = 0;
     this.enemyTileY = 0;
+    this.enemySpeed= 100;
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -323,11 +224,10 @@ Enemy.prototype.update = function(dt) {
 
         // When the Enemy is about to "enter" the board we set his speed and
         // the tile in Y ramdomly
-        speed = speedLevel(level);
+        this.enemySpeed = speedLevel(level);
         this.enemyTileY = getRandomNumber(2, 4);
         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
         this.enemyPosX = -4;
-
     }
 
     else if(this.enemyPosX<500){
@@ -336,13 +236,11 @@ Enemy.prototype.update = function(dt) {
             // so we set conditions to check it
             if((player.playerPosX+30)<(this.enemyPosX-40)){
 
-                this.enemyPosX = this.enemyPosX + (speed*dt);
-
+                this.enemyPosX = this.enemyPosX + (this.enemySpeed*dt);
             }
             else if((player.playerPosX-30)>(this.enemyPosX+40)){
 
-                this.enemyPosX = this.enemyPosX + (speed*dt);
-
+                this.enemyPosX = this.enemyPosX + (this.enemySpeed*dt);
             }
             // If the 2 condition above were false then we check if Enemy & Player
             // are in the same tile then they are colliding
@@ -351,31 +249,24 @@ Enemy.prototype.update = function(dt) {
                 // If they collide we set the player to the initial position
                 // and call scoreBoard to keep count of lives
                 if(this.enemyTileY===player.playerTileY){
+
                     player.playerPosX = 200;
                     player.playerPosY = 380;
-                    player.playerTileX = 2
-                    player.playerTileY = 0
-                    scoreBoard("bug")
-                    this.enemyPosX= this.enemyPosX + (speed*dt);
-
+                    player.playerTileX = 2;
+                    player.playerTileY = 0;
+                    scoreBoard("bug");
+                    this.enemyPosX= this.enemyPosX + (this.enemySpeed*dt);
                 }
                 else{
 
-                    this.enemyPosX= this.enemyPosX + (speed*dt);
-
+                    this.enemyPosX= this.enemyPosX + (this.enemySpeed*dt);
                 }
-
             }
-
     }
     else{
 
         this.enemyPosX = 0;
-
     }
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
 };
 
 // Draw the enemy on the screen, required method for game
@@ -413,6 +304,10 @@ Gem.prototype.update = function(dt){
             this.gemPosY = (board.initial.initialY - (board.tile_size.tileY * this.gemTileY))+50;
             this.status = "off";
             this.points = "onBoard";
+            console.log(this.gemTileY)
+            console.log(this.gemTileX)
+            console.log(player.playerTileY)
+            console.log(player.playerTileX)
 
         }
         // Checking for player & gem collision. If they collide we put the gem outside the board.
@@ -426,12 +321,12 @@ Gem.prototype.update = function(dt){
 
         }
 
-}
+};
 
 Gem.prototype.render = function(){
 
     ctx.drawImage(Resources.get(this.sprite), this.gemPosX, this.gemPosY);
-}
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -444,16 +339,16 @@ var Player = function(){
     this.movementY = 0;
     this.playerTileX = 2;
     this.playerTileY = 0;
-    this.sprite = 'images/char-horn-girl.png'
+    this.sprite = 'images/char-horn-girl.png';
 
 };
 
-Player.prototype.update = function(dt){
+Player.prototype.update = function(){
 
-    this.playerPosY*dt;
-    this.playerPosX*dt;
-    this.playerTileY*dt;
-    this.playerTileX*dt;
+    this.playerPosY = board.initial.initialY - (board.tile_size.tileY * this.playerTileY);
+    this.playerPosX = board.initial.initialX + (board.tile_size.tileX * this.playerTileX);
+
+
 
 };
 
@@ -464,6 +359,7 @@ Player.prototype.render = function(){
 };
 
 Player.prototype.handleInput = function(keys){
+    //this.update()
 
     if(keys === "up"){
 
@@ -478,6 +374,7 @@ Player.prototype.handleInput = function(keys){
             this.playerPosY = board.initial.initialY;
             this.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
             this.playerTileY = 0;
+            this.playerTileX =2;
             counter++;
             scoreBoard("water");
 
@@ -485,15 +382,12 @@ Player.prototype.handleInput = function(keys){
             // gem appeareance on the board
             if(randomNumGem <= counter){
 
-                gem.status= "on"
-                counter= 0
-                randomNumGem= getRandomNumber(0,1);
+                gem.status= "on";
+                counter= 0;
+                randomNumGem= getRandomNumber(0,5);
             }
         }
-        else{
 
-            this.playerPosY = board.initial.initialY - (board.tile_size.tileY * this.playerTileY);
-        }
      }
 
     else if(keys==="down"){
@@ -503,10 +397,10 @@ Player.prototype.handleInput = function(keys){
             this.playerPosY = board.initial.initialY - (board.tile_size.tileY * this.playerTileY);
         }
 
-        else{
+         else{
 
             this.playerTileY--;
-            this.playerPosY = board.initial.initialY - (board.tile_size.tileY * this.playerTileY);
+
         }
     }
 
@@ -520,7 +414,7 @@ Player.prototype.handleInput = function(keys){
         else{
 
             this.playerTileX++;
-            this.playerPosX = board.initial.initialX + (board.tile_size.tileX * this.playerTileX);
+
         }
     }
     else if(keys==="left"){
@@ -533,7 +427,7 @@ Player.prototype.handleInput = function(keys){
         else{
 
             this.playerTileX--;
-            this.playerPosX = board.initial.initialX + (board.tile_size.tileX * this.playerTileX);
+
         }
 
     }
@@ -559,7 +453,7 @@ document.addEventListener('keyup', function(e) {
     };
 
      player.handleInput(allowedKeys[e.keyCode]);
-})
+});
 
 /** @function getRandomNumber
   * Gives a random rumber between two numbers.
@@ -567,17 +461,103 @@ document.addEventListener('keyup', function(e) {
   * @param {number} max - Maximum number
   * @returns {number} A random number
 **/
+
+/**
+ * @function scoreBoard
+ * Change the score and level depending on player's event(reach a gem, a bug or water).
+ * Detects if player win or loose depending on player's event.
+ * @param {string} playerEvent - Player's action on board.
+**/
+function scoreBoard(playerEvent){
+
+    if(playerEvent === "gem"){
+
+        console.log(countergem);
+        eraseValue("x "+countergem, gemCoordX, livGemCoordY);
+        countergem++;
+        updateBoardCanvas("x "+countergem, gemCoordX, livGemCoordY);
+
+        if(countergem >= 3){
+
+            eraseValue("x "+counterlives, livesCoordX, livGemCoordY);
+            counterlives++;
+            updateBoardCanvas("x "+counterlives, livesCoordX, livGemCoordY);
+        }
+    }
+    else if(playerEvent === "bug"){
+
+        eraseValue("x "+counterlives, livesCoordX, livGemCoordY);
+        counterlives--;
+        updateBoardCanvas("x "+counterlives, livesCoordX, livGemCoordY);
+        console.log(counterlives);
+
+        if (counterlives <= 0){
+
+            alert("Game Over");
+            resetGameValues();
+        }
+    }
+    else if(playerEvent === "water"){
+
+        eraseValue("x "+level, levelCoordX, livGemCoordY);
+        level++;
+        updateBoardCanvas("x "+level, levelCoordX, livGemCoordY);
+
+        if(level%2===0){
+
+            newEnemycreator(level);
+        }
+
+        if (level>=5){
+            alert("You Win!");
+            resetGameValues();
+        }
+    }
+}
+
+/**
+ * @function resetGameValues
+ * Resets to initial the game to values.
+**/
+function resetGameValues(){
+
+        eraseValue("x "+countergem, gemCoordX, livGemCoordY);
+        countergem = 0;
+        updateBoardCanvas("x "+countergem, gemCoordX, livGemCoordY);
+        eraseValue("x "+counterlives, livesCoordX, livGemCoordY);
+        counterlives = 3;
+        updateBoardCanvas("x "+counterlives, livesCoordX, livGemCoordY);
+        eraseValue("x "+ level, levelCoordX, livGemCoordY);
+        level=1;
+        updateBoardCanvas("x "+ level, levelCoordX, livGemCoordY);
+
+    player.playerPosX = board.initial.initialX + (board.tile_size.tileX * 2);
+    player.playerPosY = board.initial.initialY;
+    player.boundingX = 0;
+    player.movementY = 0;
+    player.playerTileX = 2;
+    player.playerTileY = 0;
+    //level=1
+    allEnemies= [allEnemies[0]];
+
+
+}
+
 function getRandomNumber(min, max){
 
      var randomNum = Math.floor(Math.random() * (max - min + 1) + min);
-    return randomNum
+    return randomNum;
 
 }
 
-function newEnemycreator(level){
-    var level = new Enemy();
-    allEnemies.push(level);
-    console.log(allEnemies)
+/** @function newEnemycreator
+
+
+**/
+function newEnemycreator(gameLevel){
+    var gameLevel = new Enemy();
+    allEnemies.push(gameLevel);
+    console.log(allEnemies);
 }
 
 
@@ -587,7 +567,7 @@ function newEnemycreator(level){
 
 
 
-scoreBoard()
+scoreBoard();
 
 
 
