@@ -9,13 +9,12 @@ var counterlives = 3;
 
 
 /**
- * @function changeCharacters
+ * @function chooseCharacterBoard
  * Draws characters and changes main character.
  * Draws characters in charCanvas iterating over characters objec. Adds click event to canvas.
  * Detects clicks on specific coordinates and changes the character accordingly.
 */
-
-var changeCharacters = function(){
+var chooseCharacterBoard = function(){
 
     var charCanvas = document.querySelector("#charCanvas");
     var ctx = charCanvas.getContext("2d");
@@ -46,7 +45,6 @@ var changeCharacters = function(){
 
             ctx.drawImage(val, distance, -50);
             distance = distance + 100;
-            console.log(val);
         });
     };
 
@@ -56,8 +54,6 @@ var changeCharacters = function(){
         //solution found in: http://www.homeandlearn.co.uk/JS/html5_canvas_mouse_events.html
         var canvas_x = event.pageX;
         var canvas_y = event.pageY;
-        console.log(canvas_x);
-        console.log(canvas_y);
 
         if(canvas_y > 8 && canvas_y < 102){
 
@@ -86,7 +82,7 @@ var changeCharacters = function(){
 };
 
 
-changeCharacters();
+chooseCharacterBoard();
 
 /**
  * @function createNewImage
@@ -144,7 +140,6 @@ gemBoardImg.onload = function(){
 function updateBoardCanvas(counter, xCoord, yCoord){
 
     ctx2.fillStyle= fontColor;
-    //ctx2.font = "bold 40pt Raleway";
     ctx2.fillText(counter, xCoord, yCoord);
 }
 
@@ -304,11 +299,6 @@ Gem.prototype.update = function(dt){
             this.gemPosY = (board.initial.initialY - (board.tile_size.tileY * this.gemTileY))+50;
             this.status = "off";
             this.points = "onBoard";
-            console.log(this.gemTileY)
-            console.log(this.gemTileX)
-            console.log(player.playerTileY)
-            console.log(player.playerTileX)
-
         }
         // Checking for player & gem collision. If they collide we put the gem outside the board.
         //points change to taken so the condition can run again so we can keep track of the gems
@@ -472,7 +462,6 @@ function scoreBoard(playerEvent){
 
     if(playerEvent === "gem"){
 
-        console.log(countergem);
         eraseValue("x "+countergem, gemCoordX, livGemCoordY);
         countergem++;
         updateBoardCanvas("x "+countergem, gemCoordX, livGemCoordY);
@@ -489,7 +478,6 @@ function scoreBoard(playerEvent){
         eraseValue("x "+counterlives, livesCoordX, livGemCoordY);
         counterlives--;
         updateBoardCanvas("x "+counterlives, livesCoordX, livGemCoordY);
-        console.log(counterlives);
 
         if (counterlives <= 0){
 
@@ -507,7 +495,6 @@ function scoreBoard(playerEvent){
 
             newEnemycreator(level);
         }
-
         if (level>=5){
             alert("You Win!");
             resetGameValues();
@@ -537,7 +524,6 @@ function resetGameValues(){
     player.movementY = 0;
     player.playerTileX = 2;
     player.playerTileY = 0;
-    //level=1
     allEnemies= [allEnemies[0]];
 
 
@@ -551,13 +537,13 @@ function getRandomNumber(min, max){
 }
 
 /** @function newEnemycreator
-
-
+  * Create new enemies and push them into the Allenemies array
+  * @param {number} gameLevel
 **/
 function newEnemycreator(gameLevel){
+
     var gameLevel = new Enemy();
     allEnemies.push(gameLevel);
-    console.log(allEnemies);
 }
 
 
