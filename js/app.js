@@ -2,8 +2,8 @@
 
 var charactersImages =[];
 var level = 1;
-var backgroundColor = "white";
-var fontColor = "black";
+var BACKGROUND_COLOR = "#5269d5";
+var FONT_COLOR = "white";
 var countergem = 0;
 var counterlives = 3;
 
@@ -49,31 +49,40 @@ var chooseCharacterBoard = function(){
     };
 
     //@listens canvas:click
-    $("#charCanvas").on("click", function(){
+
+        document.getElementById("charCanvas").addEventListener("click", function(event){
 
         //solution found in: http://www.homeandlearn.co.uk/JS/html5_canvas_mouse_events.html
-        var canvas_x = event.pageX;
-        var canvas_y = event.pageY;
+        //var canvas_x = event.pageX;
+        //var canvas_y = event.pageY;
+        var canvas_x = event.offsetX;
+        var canvas_y = event.offsetY;
+        console.log(canvas_x);
+         //console.log(canvas_x1);
+        console.log(canvas_y);
+         //console.log(canvas_y1);
 
-        if(canvas_y > 8 && canvas_y < 102){
+        var bla = document.getElementById("charCanvas").width;
+        //console.log(bla);
+        if(canvas_y > 0 && canvas_y < 100){
 
-            if(canvas_x > 50 && canvas_x < 120){
+            if(canvas_x > 0 && canvas_x < 101){
 
                 player.sprite = characters.catGirl;
             }
-            else if(canvas_x > 140 && canvas_x < 220){
+            else if(canvas_x > 122 && canvas_x < 202){
 
                 player.sprite = characters.hornGirl;
             }
-            else if(canvas_x > 240 && canvas_x < 320){
+            else if(canvas_x > 223 && canvas_x < 303){
 
                 player.sprite = characters.pinkGirl;
             }
-            else if(canvas_x > 345 && canvas_x < 420){
+            else if(canvas_x > 324 && canvas_x < 404){
 
                 player.sprite = characters.princessGirl;
             }
-            else if(canvas_x > 450  && canvas_x < 520){
+            else if(canvas_x > 425  && canvas_x < 505){
 
                 player.sprite = characters.boy;
             }
@@ -139,7 +148,7 @@ gemBoardImg.onload = function(){
 **/
 function updateBoardCanvas(counter, xCoord, yCoord){
 
-    ctx2.fillStyle= fontColor;
+    ctx2.fillStyle= FONT_COLOR;
     ctx2.fillText(counter, xCoord, yCoord);
 }
 
@@ -149,7 +158,7 @@ function updateBoardCanvas(counter, xCoord, yCoord){
 **/
 function eraseValue(counter, xCoord, yCoord){
 
-    ctx2.fillStyle= backgroundColor;
+    ctx2.fillStyle= BACKGROUND_COLOR;
     ctx2.fillText(counter, xCoord, yCoord);
 }
 
@@ -215,14 +224,15 @@ var Enemy = function() {
 
 Enemy.prototype.update = function(dt) {
 
-    if(this.enemyPosX===0){
+    if(this.enemyPosX === 0){
 
         // When the Enemy is about to "enter" the board we set his speed and
         // the tile in Y ramdomly
         this.enemySpeed = speedLevel(level);
+        this.enemyPosX = this.enemyPosX + (this.enemySpeed*dt);
         this.enemyTileY = getRandomNumber(2, 4);
         this.enemyPosY = board.initial.initialY - (board.tile_size.tileY * this.enemyTileY);
-        this.enemyPosX = -4;
+
     }
 
     else if(this.enemyPosX<500){
@@ -261,6 +271,8 @@ Enemy.prototype.update = function(dt) {
     else{
 
         this.enemyPosX = 0;
+        this.enemyPosY = 600;
+
     }
 };
 
@@ -303,7 +315,7 @@ Gem.prototype.update = function(dt){
         // Checking for player & gem collision. If they collide we put the gem outside the board.
         //points change to taken so the condition can run again so we can keep track of the gems
         //collected calling scoreBoard
-        if(player.playerTileY===gem.gemTileY && player.playerTileX===gem.gemTileX && this.points==="onBoard"){
+        if(player.playerTileY === this.gemTileY && player.playerTileX === this.gemTileX && this.points === "onBoard"){
 
             this.gemPosY = 600;
             this.points = "taken";

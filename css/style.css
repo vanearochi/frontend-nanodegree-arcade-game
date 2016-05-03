@@ -2,6 +2,20 @@
 body {
 
     text-align: center;
-    background-image: white;
+    background-image: url("pattern-1004855_1280.jpg");
 
+
+}
+
+#scoreBoard,
+#charCanvas{
+	border-radius: 25px;
+	border-style: groove;
+	border-color: #5269d5;
+	padding: 10px;
+	background-color: #5269d5;
+}
+
+#charCanvas{
+	border-radius: 25px;
 }
